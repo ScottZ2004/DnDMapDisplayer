@@ -1,4 +1,4 @@
-package org.example.dndmapdisplayerbackend.domain.port.in;
+package org.example.dndmapdisplayerbackend.domain.port.in.user;
 
 import org.example.dndmapdisplayerbackend.domain.model.User;
 

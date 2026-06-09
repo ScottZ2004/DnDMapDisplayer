@@ -1,7 +1,7 @@
-package org.example.dndmapdisplayerbackend.adapters.in.rest;
+package org.example.dndmapdisplayerbackend.adapters.in.rest.user;
 import org.example.dndmapdisplayerbackend.domain.model.User;
-import org.example.dndmapdisplayerbackend.domain.port.in.CreateUserUseCase;
-import org.example.dndmapdisplayerbackend.domain.port.in.GetUserUseCase;
+import org.example.dndmapdisplayerbackend.domain.port.in.user.CreateUserUseCase;
+import org.example.dndmapdisplayerbackend.domain.port.in.user.GetUserUseCase;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +25,8 @@ public class UserController {
 
         User user = createUserUseCase.createUser(
                 request.name(),
-                request.email());
+                request.email(),
+                request.password());
 
         return new UserResponse(
                 user.getId(),
