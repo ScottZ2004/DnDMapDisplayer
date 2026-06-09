@@ -5,16 +5,18 @@ import org.example.dndmapdisplayerbackend.domain.exception.EmailAlreadyExistsExc
 import org.example.dndmapdisplayerbackend.domain.exception.InvalidCredentialsException;
 import org.example.dndmapdisplayerbackend.domain.exception.InvalidUserDataException;
 import org.example.dndmapdisplayerbackend.domain.exception.UserNotFoundException;
+import org.example.dndmapdisplayerbackend.domain.exception.user.UnauthorizedException;
 import org.example.dndmapdisplayerbackend.domain.model.User;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.CreateUserUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.GetUserUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.LoginUseCase;
+import org.example.dndmapdisplayerbackend.domain.port.in.user.UpdateUserUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.out.bcrypt.PasswordEncoderPort;
 import org.example.dndmapdisplayerbackend.domain.port.out.jwt.TokenProviderPort;
 import org.example.dndmapdisplayerbackend.domain.port.out.presistance.user.UserRepositoryPort;
 
 @DomainService
-public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseCase {
+public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseCase, UpdateUserUseCase {
 
     private final PasswordEncoderPort passwordEncoder;
     private final UserRepositoryPort userRepository;
@@ -92,5 +94,35 @@ public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseC
             throw new InvalidCredentialsException();
         }
         return tokenProvider.generateToken(user);
+    }
+
+    @Override
+    public User updateUser(Long id, String name, String email, String password, String requestingUserEmail) {
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        if (!user.getEmail().equals(requestingUserEmail)) {
+            throw new UnauthorizedException("You can only update your own account");
+        }
+
+        if (name != null && !name.isBlank()) {
+            user = new User(user.getId(), name, user.getEmail(), user.getPassword(), user.getRole(), user.isEmailVerified());
+        }
+
+        if (email != null && !email.isBlank()) {
+            if (!email.matches(EMAIL_REGEX)) {
+                throw new InvalidUserDataException("Invalid email format");
+            }
+            if (userRepository.existsByEmail(email)) {
+                throw new EmailAlreadyExistsException();
+            }
+            user = new User(user.getId(), user.getName(), email, user.getPassword(), user.getRole(), user.isEmailVerified());
+        }
+
+        if (password != null && !password.isBlank()) {
+            String hashed = passwordEncoder.encode(password);
+            user = new User(user.getId(), user.getName(), user.getEmail(), hashed, user.getRole(), user.isEmailVerified());
+        }
+
+        return userRepository.save(user);
     }
 }

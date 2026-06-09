@@ -4,6 +4,7 @@ import org.example.dndmapdisplayerbackend.domain.exception.EmailAlreadyExistsExc
 import org.example.dndmapdisplayerbackend.domain.exception.InvalidCredentialsException;
 import org.example.dndmapdisplayerbackend.domain.exception.InvalidUserDataException;
 import org.example.dndmapdisplayerbackend.domain.exception.UserNotFoundException;
+import org.example.dndmapdisplayerbackend.domain.exception.user.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,6 +33,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCredentials(InvalidCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
     }
 }
