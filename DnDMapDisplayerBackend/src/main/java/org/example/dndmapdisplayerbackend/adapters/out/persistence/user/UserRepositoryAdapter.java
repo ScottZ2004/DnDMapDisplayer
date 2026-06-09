@@ -36,6 +36,11 @@ public class UserRepositoryAdapter
     }
 
     @Override
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
     public User save(User user) {
 
         UserEntity entity = new UserEntity(

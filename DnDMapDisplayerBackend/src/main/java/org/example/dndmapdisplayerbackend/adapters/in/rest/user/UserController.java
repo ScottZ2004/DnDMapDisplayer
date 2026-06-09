@@ -4,10 +4,7 @@ import org.example.dndmapdisplayerbackend.adapters.in.rest.user.request.LoginUse
 import org.example.dndmapdisplayerbackend.adapters.in.rest.user.request.UpdateUserRequest;
 import org.example.dndmapdisplayerbackend.adapters.in.rest.user.response.UserResponse;
 import org.example.dndmapdisplayerbackend.domain.model.User;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.CreateUserUseCase;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.GetUserUseCase;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.LoginUseCase;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.UpdateUserUseCase;
+import org.example.dndmapdisplayerbackend.domain.port.in.user.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +17,17 @@ public class UserController {
     private final GetUserUseCase getUserUseCase;
     private final LoginUseCase loginUseCase;
     private final UpdateUserUseCase updateUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
 
     public UserController(
             CreateUserUseCase createUserUseCase,
-            GetUserUseCase getUserUseCase, LoginUseCase loginUseCase, UpdateUserUseCase updateUserUseCase) {
+            GetUserUseCase getUserUseCase, LoginUseCase loginUseCase, UpdateUserUseCase updateUserUseCase, DeleteUserUseCase deleteUserUseCase) {
 
         this.createUserUseCase = createUserUseCase;
         this.getUserUseCase = getUserUseCase;
         this.loginUseCase = loginUseCase;
         this.updateUserUseCase = updateUserUseCase;
+        this.deleteUserUseCase = deleteUserUseCase;
     }
 
     @PostMapping("/register")
@@ -74,4 +73,11 @@ public class UserController {
                 updated.getName(),
                 updated.getEmail());
     }
+
+    @DeleteMapping
+    public ResponseEntity<String> delete(@AuthenticationPrincipal String email) {
+        deleteUserUseCase.deleteUser(email);
+        return ResponseEntity.ok("User deleted successfully");
+    }
+
 }

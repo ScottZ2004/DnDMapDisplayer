@@ -7,16 +7,13 @@ import org.example.dndmapdisplayerbackend.domain.exception.InvalidUserDataExcept
 import org.example.dndmapdisplayerbackend.domain.exception.UserNotFoundException;
 import org.example.dndmapdisplayerbackend.domain.exception.user.UnauthorizedException;
 import org.example.dndmapdisplayerbackend.domain.model.User;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.CreateUserUseCase;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.GetUserUseCase;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.LoginUseCase;
-import org.example.dndmapdisplayerbackend.domain.port.in.user.UpdateUserUseCase;
+import org.example.dndmapdisplayerbackend.domain.port.in.user.*;
 import org.example.dndmapdisplayerbackend.domain.port.out.bcrypt.PasswordEncoderPort;
 import org.example.dndmapdisplayerbackend.domain.port.out.jwt.TokenProviderPort;
 import org.example.dndmapdisplayerbackend.domain.port.out.presistance.user.UserRepositoryPort;
 
 @DomainService
-public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseCase, UpdateUserUseCase {
+public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseCase, UpdateUserUseCase, DeleteUserUseCase {
 
     private final PasswordEncoderPort passwordEncoder;
     private final UserRepositoryPort userRepository;
@@ -79,9 +76,7 @@ public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseC
 
         return userRepository.findById(id)
 
-                .orElseThrow(() ->
-
-                        new RuntimeException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
     }
 
@@ -124,5 +119,16 @@ public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseC
         }
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        if (!user.getEmail().equals(email)) {
+            throw new UnauthorizedException("You can only delete your own account");
+        }
+
+        userRepository.deleteById(user.getId());
     }
 }
