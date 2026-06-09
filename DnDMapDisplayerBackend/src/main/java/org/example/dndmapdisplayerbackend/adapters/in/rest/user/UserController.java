@@ -2,6 +2,8 @@ package org.example.dndmapdisplayerbackend.adapters.in.rest.user;
 import org.example.dndmapdisplayerbackend.domain.model.User;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.CreateUserUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.GetUserUseCase;
+import org.example.dndmapdisplayerbackend.domain.port.in.user.LoginUseCase;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,16 +12,18 @@ public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
     private final GetUserUseCase getUserUseCase;
+    private final LoginUseCase loginUseCase;
 
     public UserController(
             CreateUserUseCase createUserUseCase,
-            GetUserUseCase getUserUseCase) {
+            GetUserUseCase getUserUseCase, LoginUseCase loginUseCase) {
 
         this.createUserUseCase = createUserUseCase;
         this.getUserUseCase = getUserUseCase;
+        this.loginUseCase = loginUseCase;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public UserResponse create(
             @RequestBody CreateUserRequest request) {
 
@@ -32,6 +36,13 @@ public class UserController {
                 user.getId(),
                 user.getName(),
                 user.getEmail());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(
+            @RequestBody LoginUserRequest request) {
+        String token = loginUseCase.Login(request.email(), request.password());
+        return ResponseEntity.ok(token);
     }
 
     @GetMapping("/{id}")

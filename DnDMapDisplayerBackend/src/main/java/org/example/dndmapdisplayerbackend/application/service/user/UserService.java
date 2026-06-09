@@ -1,28 +1,33 @@
 package org.example.dndmapdisplayerbackend.application.service.user;
 
-import org.example.dndmapdisplayerbackend.adapters.out.bcrypt.BCryptPasswordEncoderAdapter;
 import org.example.dndmapdisplayerbackend.config.DomainService;
 import org.example.dndmapdisplayerbackend.domain.exception.EmailAlreadyExistsException;
+import org.example.dndmapdisplayerbackend.domain.exception.InvalidCredentialsException;
 import org.example.dndmapdisplayerbackend.domain.exception.InvalidUserDataException;
+import org.example.dndmapdisplayerbackend.domain.exception.UserNotFoundException;
 import org.example.dndmapdisplayerbackend.domain.model.User;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.CreateUserUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.GetUserUseCase;
+import org.example.dndmapdisplayerbackend.domain.port.in.user.LoginUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.out.bcrypt.PasswordEncoderPort;
+import org.example.dndmapdisplayerbackend.domain.port.out.jwt.TokenProviderPort;
 import org.example.dndmapdisplayerbackend.domain.port.out.presistance.user.UserRepositoryPort;
 
 @DomainService
-public class UserService implements CreateUserUseCase, GetUserUseCase {
+public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseCase {
 
     private final PasswordEncoderPort passwordEncoder;
     private final UserRepositoryPort userRepository;
+    private final TokenProviderPort tokenProvider;
 
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
 
-    public UserService(PasswordEncoderPort passwordEncoder, UserRepositoryPort userRepository) {
+    public UserService(PasswordEncoderPort passwordEncoder, UserRepositoryPort userRepository, TokenProviderPort tokenProvider) {
         this.passwordEncoder = passwordEncoder;
 
         this.userRepository = userRepository;
 
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
@@ -78,4 +83,14 @@ public class UserService implements CreateUserUseCase, GetUserUseCase {
 
     }
 
+    @Override
+    public String Login(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(InvalidCredentialsException::new);
+
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new InvalidCredentialsException();
+        }
+        return tokenProvider.generateToken(user);
+    }
 }

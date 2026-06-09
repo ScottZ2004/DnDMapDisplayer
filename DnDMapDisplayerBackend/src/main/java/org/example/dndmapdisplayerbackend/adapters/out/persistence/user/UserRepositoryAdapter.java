@@ -21,8 +21,18 @@ public class UserRepositoryAdapter
 
     @Override
     public Boolean existsByEmail(String email) {
-        UserEntity user = repository.findByEmail(email);
-        return user != null;
+        Optional<UserEntity> user = repository.findByEmail(email);
+        return user.isPresent();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return repository.findByEmail(email).map(entity -> new User(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail(),
+                entity.getPassword())
+        );
     }
 
     @Override
@@ -56,6 +66,6 @@ public class UserRepositoryAdapter
                         entity.getName(),
                         entity.getEmail(),
                         entity.getPassword())
-                ).stream().findFirst();
+                );
     }
 }

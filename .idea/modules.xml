@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DnDMapDisplayer.iml" filepath="$PROJECT_DIR$/.idea/DnDMapDisplayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DnDMapDisplayerBackend/DnDMapDisplayerBackend.iml" filepath="$PROJECT_DIR$/DnDMapDisplayerBackend/DnDMapDisplayerBackend.iml" />
     </modules>
   </component>
 </project>

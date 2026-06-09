@@ -1,6 +1,7 @@
 package org.example.dndmapdisplayerbackend.adapters.in.rest;
 
 import org.example.dndmapdisplayerbackend.domain.exception.EmailAlreadyExistsException;
+import org.example.dndmapdisplayerbackend.domain.exception.InvalidCredentialsException;
 import org.example.dndmapdisplayerbackend.domain.exception.InvalidUserDataException;
 import org.example.dndmapdisplayerbackend.domain.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -27,5 +28,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT.value()));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentials(InvalidCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
     }
 }
