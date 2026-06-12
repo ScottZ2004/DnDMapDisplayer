@@ -1,5 +1,8 @@
 package org.example.dndmapdisplayerbackend.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private final Long id;
 
@@ -12,6 +15,8 @@ public class User {
     private final Role role;
 
     private final boolean emailVerified;
+
+    private final List<Campaign> campaigns = new ArrayList<>();
 
     public User(Long id, String name, String email, String password) {
 
@@ -71,5 +76,13 @@ public class User {
 
     public boolean isEmailVerified() {
         return emailVerified;
+    }
+
+    public List<Campaign> getCampaigns() {
+        return campaigns;
+    }
+
+    public void addCampaign(Campaign campaign) {
+        this.campaigns.add(campaign);
     }
 }

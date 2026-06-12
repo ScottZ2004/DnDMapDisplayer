@@ -1,10 +1,10 @@
-package org.example.dndmapdisplayerbackend.application.service.user;
+package org.example.dndmapdisplayerbackend.application.service;
 
 import org.example.dndmapdisplayerbackend.config.DomainService;
-import org.example.dndmapdisplayerbackend.domain.exception.EmailAlreadyExistsException;
-import org.example.dndmapdisplayerbackend.domain.exception.InvalidCredentialsException;
-import org.example.dndmapdisplayerbackend.domain.exception.InvalidUserDataException;
-import org.example.dndmapdisplayerbackend.domain.exception.UserNotFoundException;
+import org.example.dndmapdisplayerbackend.domain.exception.user.EmailAlreadyExistsException;
+import org.example.dndmapdisplayerbackend.domain.exception.user.InvalidCredentialsException;
+import org.example.dndmapdisplayerbackend.domain.exception.user.InvalidUserDataException;
+import org.example.dndmapdisplayerbackend.domain.exception.user.UserNotFoundException;
 import org.example.dndmapdisplayerbackend.domain.exception.user.UnauthorizedException;
 import org.example.dndmapdisplayerbackend.domain.model.User;
 import org.example.dndmapdisplayerbackend.domain.port.in.user.*;
@@ -30,7 +30,6 @@ public class UserService implements CreateUserUseCase, GetUserUseCase, LoginUseC
     }
 
     @Override
-
     public User createUser(String name, String email, String password) {
         if (name == null || name.isBlank()) {
             throw new InvalidUserDataException("Name cannot be null or blank");
