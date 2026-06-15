@@ -2,7 +2,7 @@ package org.example.dndmapdisplayerbackend.adapters.out.persistence.campaign;
 
 import org.example.dndmapdisplayerbackend.adapters.out.persistence.user.UserEntity;
 import org.example.dndmapdisplayerbackend.adapters.out.persistence.user.UserRepository;
-import org.example.dndmapdisplayerbackend.domain.exception.Campaign.CampaignNotFoundException;
+import org.example.dndmapdisplayerbackend.domain.exception.campaign.CampaignNotFoundException;
 import org.example.dndmapdisplayerbackend.domain.exception.NotFoundException;
 import org.example.dndmapdisplayerbackend.domain.exception.user.UserNotFoundException;
 import org.example.dndmapdisplayerbackend.domain.model.Campaign;

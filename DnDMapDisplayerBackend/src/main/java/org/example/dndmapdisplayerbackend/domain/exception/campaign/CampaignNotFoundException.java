@@ -1,4 +1,4 @@
-package org.example.dndmapdisplayerbackend.domain.exception.Campaign;
+package org.example.dndmapdisplayerbackend.domain.exception.campaign;
 
 public class CampaignNotFoundException extends RuntimeException {
     public CampaignNotFoundException() {

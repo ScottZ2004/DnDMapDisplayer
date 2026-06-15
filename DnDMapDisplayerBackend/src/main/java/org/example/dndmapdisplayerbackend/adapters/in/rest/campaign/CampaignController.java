@@ -1,7 +1,5 @@
-package org.example.dndmapdisplayerbackend.adapters.in.rest.user;
+package org.example.dndmapdisplayerbackend.adapters.in.rest.campaign;
 
-import org.example.dndmapdisplayerbackend.adapters.in.rest.user.request.CreateCampaignRequest;
-import org.example.dndmapdisplayerbackend.adapters.in.rest.user.response.CampaignResponse;
 import org.example.dndmapdisplayerbackend.domain.model.Campaign;
 import org.example.dndmapdisplayerbackend.domain.port.in.campaign.*;
 import org.springframework.http.ResponseEntity;

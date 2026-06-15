@@ -1,7 +1,8 @@
 package org.example.dndmapdisplayerbackend.adapters.in.rest;
 
 import org.example.dndmapdisplayerbackend.domain.exception.*;
-import org.example.dndmapdisplayerbackend.domain.exception.Campaign.CampaignNotFoundException;
+import org.example.dndmapdisplayerbackend.domain.exception.campaign.CampaignNotFoundException;
+import org.example.dndmapdisplayerbackend.domain.exception.file.FileNotFoundException;
 import org.example.dndmapdisplayerbackend.domain.exception.user.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CampaignNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCampaignNotFound(CampaignNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleFileNotFound(FileNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
     }
 }
