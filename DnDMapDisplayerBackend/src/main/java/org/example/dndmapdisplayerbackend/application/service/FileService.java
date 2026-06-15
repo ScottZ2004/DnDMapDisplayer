@@ -7,13 +7,14 @@ import org.example.dndmapdisplayerbackend.domain.exception.user.InvalidUserDataE
 import org.example.dndmapdisplayerbackend.domain.exception.user.UnauthorizedException;
 import org.example.dndmapdisplayerbackend.domain.exception.user.UserNotFoundException;
 import org.example.dndmapdisplayerbackend.domain.model.User;
+import org.example.dndmapdisplayerbackend.domain.port.in.file.DeleteFileUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.file.GetFileUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.file.UploadFileUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.out.file.FileStoragePort;
 import org.example.dndmapdisplayerbackend.domain.port.out.presistance.user.UserRepositoryPort;
 
 @DomainService
-public class FileService implements GetFileUseCase, UploadFileUseCase {
+public class FileService implements GetFileUseCase, UploadFileUseCase, DeleteFileUseCase {
 
     FileStoragePort fileStoragePort;
     UserRepositoryPort userRepositoryPort;
@@ -50,5 +51,19 @@ public class FileService implements GetFileUseCase, UploadFileUseCase {
         }
 
         return fileStoragePort.store(userId, data, fileName, contentType);
+    }
+
+    @Override
+    public void deleteFile(Long userId, String filename, String requestingUserEmail) {
+        User user = userRepositoryPort.findById(userId).orElseThrow(UserNotFoundException::new);
+        if (!user.getEmail().equals(requestingUserEmail)) {
+            throw new UnauthorizedException("You can only delete files for your own account");
+        }
+
+        if(!fileStoragePort.exists(userId, filename)) {
+            throw new FileNotFoundException(filename);
+        }
+
+        fileStoragePort.delete(userId, filename);
     }
 }

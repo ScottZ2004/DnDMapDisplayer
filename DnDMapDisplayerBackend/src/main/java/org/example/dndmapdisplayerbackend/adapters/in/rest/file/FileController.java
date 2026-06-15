@@ -1,5 +1,6 @@
 package org.example.dndmapdisplayerbackend.adapters.in.rest.file;
 
+import org.example.dndmapdisplayerbackend.domain.port.in.file.DeleteFileUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.file.GetFileUseCase;
 import org.example.dndmapdisplayerbackend.domain.port.in.file.UploadFileUseCase;
 import org.springframework.http.HttpHeaders;
@@ -18,10 +19,12 @@ public class FileController {
 
     private final UploadFileUseCase uploadFileUseCase;
     private final GetFileUseCase getFileUseCase;
+    private final DeleteFileUseCase deleteFileUseCase;
 
-    public FileController(UploadFileUseCase uploadFileUseCase, GetFileUseCase getFileUseCase) {
+    public FileController(UploadFileUseCase uploadFileUseCase, GetFileUseCase getFileUseCase, DeleteFileUseCase deleteFileUseCase) {
         this.uploadFileUseCase = uploadFileUseCase;
         this.getFileUseCase = getFileUseCase;
+        this.deleteFileUseCase = deleteFileUseCase;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -49,5 +52,13 @@ public class FileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(data);
+    }
+
+    @DeleteMapping("/{filename}")
+    public ResponseEntity<Void> delete(@PathVariable Long userId,
+                                       @PathVariable String filename,
+                                       @AuthenticationPrincipal String email) {
+        deleteFileUseCase.deleteFile(userId, filename, email);
+        return ResponseEntity.noContent().build();
     }
 }
