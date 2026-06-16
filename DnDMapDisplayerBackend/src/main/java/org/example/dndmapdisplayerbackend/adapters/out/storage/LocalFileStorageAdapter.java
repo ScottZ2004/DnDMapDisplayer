@@ -57,4 +57,14 @@ public class LocalFileStorageAdapter implements FileStoragePort {
             throw new FileNotFoundException(filename);
         }
     }
+
+    @Override
+    public String getFileName(String path) {
+        Path filePath = Path.of(path);
+        if (Files.exists(filePath)) {
+            return filePath.getFileName().toString();
+        }
+
+        throw new FileNotFoundException(path);
+    }
 }

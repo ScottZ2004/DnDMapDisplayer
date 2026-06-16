@@ -8,19 +8,21 @@ public class Map {
     private final String description;
     private final Image image;
     private final Image fogOfWarState;
+    private final boolean fogOfWarEnabled;
     private final List<Token> tokens;
-    private final float RowSize;
-    private final float ColumnSize;
+    private final float rowSize;
+    private final float columnSize;
 
-    public Map(Long id, String name, String description, Image image, Image fogOfWarState, List<Token> tokens, float RowSize, float ColumnSize, float columnSize) {
+    public Map(Long id, String name, String description, Image image, Image fogOfWarState, boolean fogOfWarEnabled, List<Token> tokens, float rowSize, float columnSize) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
         this.fogOfWarState = fogOfWarState;
+        this.fogOfWarEnabled = fogOfWarEnabled;
         this.tokens = tokens;
-        this.RowSize = RowSize;
-        this.ColumnSize = columnSize;
+        this.rowSize = rowSize;
+        this.columnSize = columnSize;
     }
 
     public Long getId() {
@@ -43,15 +45,19 @@ public class Map {
         return fogOfWarState;
     }
 
+    public boolean isFogOfWarEnabled() {
+        return fogOfWarEnabled;
+    }
+
     public List<Token> getTokens() {
         return tokens;
     }
 
     public float getRowSize() {
-        return RowSize;
+        return rowSize;
     }
 
     public float getColumnSize() {
-        return ColumnSize;
+        return columnSize;
     }
 }

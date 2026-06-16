@@ -5,4 +5,5 @@ public interface FileStoragePort {
     byte[] retrieve(Long userId, String filename);
     boolean exists(Long userId, String filename);
     void delete(Long userId, String filename);
+    String getFileName(String path);
 }
