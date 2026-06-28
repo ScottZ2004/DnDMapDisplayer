@@ -9,4 +9,5 @@ import java.util.List;
 public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> {
 
     List<CampaignEntity> getCampaignEntitiesByUser(UserEntity user);
+
 }

@@ -4,10 +4,9 @@ import org.example.dndmapdisplayerbackend.domain.model.Map;
 import org.example.dndmapdisplayerbackend.domain.port.in.map.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.xml.validation.Validator;
 
 @RestController
 @RequestMapping("api/maps")
@@ -51,5 +50,11 @@ public class MapController {
                 map.getFogOfWarState(),
                 map.isFogOfWarEnabled()
         );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMap(@PathVariable Long id, @AuthenticationPrincipal String email) {
+        deleteMapUseCase.deleteMap(id, email);
+        return ResponseEntity.ok("Map deleted successfully");
     }
 }

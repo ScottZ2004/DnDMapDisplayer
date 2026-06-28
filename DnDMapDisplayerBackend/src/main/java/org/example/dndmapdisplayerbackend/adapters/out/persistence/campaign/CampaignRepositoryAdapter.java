@@ -1,5 +1,7 @@
 package org.example.dndmapdisplayerbackend.adapters.out.persistence.campaign;
 
+import org.example.dndmapdisplayerbackend.adapters.out.persistence.map.MapEntity;
+import org.example.dndmapdisplayerbackend.adapters.out.persistence.map.MapRepository;
 import org.example.dndmapdisplayerbackend.adapters.out.persistence.user.UserEntity;
 import org.example.dndmapdisplayerbackend.adapters.out.persistence.user.UserRepository;
 import org.example.dndmapdisplayerbackend.domain.exception.campaign.CampaignNotFoundException;
@@ -16,11 +18,13 @@ import java.util.List;
 public class CampaignRepositoryAdapter implements CampaignRepositoryPort {
     private final CampaignRepository repository;
     private final UserRepository userRepository;
+    private final MapRepository mapRepository;
 
-    public CampaignRepositoryAdapter(CampaignRepository repository, UserRepository userRepository) {
+    public CampaignRepositoryAdapter(CampaignRepository repository, UserRepository userRepository, MapRepository mapRepository) {
         this.repository = repository;
 
         this.userRepository = userRepository;
+        this.mapRepository = mapRepository;
     }
 
 
@@ -71,6 +75,7 @@ public class CampaignRepositoryAdapter implements CampaignRepositoryPort {
 
     @Override
     public void delete(Long id) {
+        mapRepository.deleteAllByCampaignId(id);
         repository.deleteById(id);
     }
 

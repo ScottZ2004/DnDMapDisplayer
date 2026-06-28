@@ -1,5 +1,6 @@
 package org.example.dndmapdisplayerbackend.application.service;
 
+import org.example.dndmapdisplayerbackend.adapters.out.persistence.map.MapRepository;
 import org.example.dndmapdisplayerbackend.config.DomainService;
 import org.example.dndmapdisplayerbackend.domain.exception.InvalidDataException;
 import org.example.dndmapdisplayerbackend.domain.exception.user.UserNotFoundException;
@@ -66,7 +67,15 @@ public class MapService implements CreateMapUseCase, UpdateMapUseCase, GetMapUse
 
     @Override
     public void deleteMap(Long id, String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
 
+        if (!mapRepositoryPort.userHasMap(id, user.getId())) {
+            throw new InvalidDataException("User does not own this map");
+        }
+
+        mapRepositoryPort.delete(id);
+
+        // TODo: delete all tokens of the map
     }
 
     @Override

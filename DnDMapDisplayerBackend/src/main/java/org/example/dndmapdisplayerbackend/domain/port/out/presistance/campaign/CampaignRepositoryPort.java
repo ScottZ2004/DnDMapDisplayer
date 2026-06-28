@@ -14,6 +14,7 @@ public interface CampaignRepositoryPort {
 
     void delete(Long id);
 
+
     Campaign update(Campaign campaign);
 
     boolean userHasCampaign(Long id, User user);
